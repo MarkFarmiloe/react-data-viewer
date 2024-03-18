@@ -9,17 +9,17 @@ function App() {
   const [fieldInfos, setFieldInfos] = useState();
   const [rows, setRows] = useState();
   useEffect(() => {
-    setFieldInfos([
-      { fldno: 1, dataType: "", text: "Surname", sortIndex: 0 },
-      { fldno: 0, dataType: "", text: "Forename", sortIndex: 0 },
-      { fldno: 2, dataType: "", text: "Age", sortIndex: 1, imgsrc: "./asc.png" },
+    setFieldInfos([ 
+      { fldno: 2, dataType: "", text: "Surname", sortIndex: 0 },
+      { fldno: 1, dataType: "", text: "Forename", sortIndex: 0 },
+      { fldno: 3, dataType: "", text: "Age", sortIndex: 1, imgsrc: "./asc.png" },
     ]);
   }, []);
   useEffect(() => {
       setRows([
-      ["John", "Smith", 42, "extra"],
-      ["Mark", "Farmiloe", 65, "unused"],
-      ["Hilary", "Farmiloe", 60, "data"]
+      [1, "John", "Smith", 42, "extra"],
+      [2, "Mark", "Farmiloe", 65, "unused"],
+      [3, "Hilary", "Farmiloe", 60, "data"]
     ]);
   }, []);
 
