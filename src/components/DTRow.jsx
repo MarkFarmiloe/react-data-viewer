@@ -17,7 +17,7 @@ const DTRow = ({ fieldInfos, row }) => {
                 return [v, ""];
         }
     }
-    console.log(fieldInfos, row);
+    // console.log(row);
     return (
         <tr key={row[0]}>
             {fieldInfos.map(fldInfo => {
@@ -33,12 +33,11 @@ const DTRow = ({ fieldInfos, row }) => {
     )
 }
 DTRow.propTypes = {
-    index: PropTypes.any.isRequired,
     fieldInfos: PropTypes.arrayOf(PropTypes.shape({
         fldno: PropTypes.number.isRequired,
         dataType: PropTypes.string.isRequired
     })),
-    row: PropTypes.arrayOf(PropTypes.any.isRequired)
+    row: PropTypes.arrayOf(PropTypes.any).isRequired
 }
 
 export default DTRow;
