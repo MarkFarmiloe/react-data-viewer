@@ -7,7 +7,6 @@ const DTHSearch = ({fieldInfo, valueUpdated}) => {
         setValue(e.target.value);
         valueUpdated(fldno, e.target.value);
     }
-    // const {fldno, text, imgsrc, sortIndex} = fieldInfo;
     const {fldno} = fieldInfo;
     return (
         <th scope="col" value={fldno}>
