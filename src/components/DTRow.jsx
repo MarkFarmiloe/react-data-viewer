@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-const DTRow = ({ key, fieldInfos, row }) => {
+const DTRow = ({ fieldInfos, row }) => {
     const dateToString = v => {
         const d = new Date(0, 0, v - 1);
         return d.toLocaleDateString();
@@ -19,7 +19,7 @@ const DTRow = ({ key, fieldInfos, row }) => {
     }
     console.log(fieldInfos, row);
     return (
-        <tr key={key}>
+        <tr key={row[0]}>
             {fieldInfos.map(fldInfo => {
                 const v = row[fldInfo.fldno];
                 const [txt, cls] = formatValue(v, fldInfo.dataType);
@@ -33,7 +33,7 @@ const DTRow = ({ key, fieldInfos, row }) => {
     )
 }
 DTRow.propTypes = {
-    key: PropTypes.any.isRequired,
+    index: PropTypes.any.isRequired,
     fieldInfos: PropTypes.arrayOf(PropTypes.shape({
         fldno: PropTypes.number.isRequired,
         dataType: PropTypes.string.isRequired
