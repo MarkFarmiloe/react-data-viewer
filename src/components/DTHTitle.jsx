@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-const DTHColumn = ({fieldInfo}) => {
+const DTHTitle = ({fieldInfo}) => {
     const {fldno, text, imgsrc, sortIndex} = fieldInfo;
     // console.log(fldno, text, imgsrc, sortIndex);
     return (
@@ -12,7 +12,7 @@ const DTHColumn = ({fieldInfo}) => {
         </th>
     )
 }
-DTHColumn.propTypes = {
+DTHTitle.propTypes = {
     fieldInfo: PropTypes.shape({
         fldno: PropTypes.number.isRequired,
         text: PropTypes.string.isRequired,
@@ -21,4 +21,4 @@ DTHColumn.propTypes = {
     })
 }
 
-export default DTHColumn;
+export default DTHTitle;
