@@ -3,9 +3,10 @@ import DTHeader from "./DTHeader";
 import DTRow from "./DTRow";
 import { useRef, useState } from 'react';
 
-const DataTable = ({ fieldInfos, rows }) => {
+const DataTable = ({ fieldInfos, rows, calcFields }) => {
     const [filters, setFilters] = useState({}); // the set of filters on the data
     const [currentSort, setCurrentSort] = useState(""); // the current sort of the data
+    const [refresh, setRefresh] = useState(true);
     const config = useRef({
         sorts: [],
         indexes: {},
@@ -84,7 +85,12 @@ const DataTable = ({ fieldInfos, rows }) => {
         }
         return quickIndex(rows, sortfn(config.current.sorts));
     };
-
+    const rowChanged = (rowIndex, fldno, newValue) => {
+        console.log(rowIndex, fldno, newValue);
+        rows[rowIndex][fldno] = newValue;
+        calcFields(rows);
+        if (refresh) { setRefresh(false); } else { setRefresh(true); }
+    }
     if (!config.current.filteredRowIndexes) {
         let fri = config.current.indexes[currentSort] ?? Array.from({ length: rows.length }, (_, i) => i);
         Object.keys(filters).forEach(fldno => {
@@ -92,13 +98,16 @@ const DataTable = ({ fieldInfos, rows }) => {
             fri = fri.filter(rowIndex => rows[rowIndex][fldno].toLowerCase().includes(filterValue));    
         });
         config.current.filteredRowIndexes = fri;
+        if (calcFields) { calcFields(rows) }
     }
     return (
         <table>
             <DTHeader fieldInfos={fieldInfos} filtersChanged={handleFiltersChange} sorts={config.current.sorts} sortsChanged={handleSortsChange} />
             <tbody>
                 {config.current.filteredRowIndexes.map(rowIndex => { 
-                    return <DTRow key={rows[rowIndex][0]} fieldInfos={fieldInfos} row={rows[rowIndex]} />
+                    return <DTRow key={rows[rowIndex][0]} 
+                        fieldInfos={fieldInfos} row={rows[rowIndex]} 
+                        rowChanged={(fldno, newValue) => rowChanged(rowIndex, fldno, newValue)} />
                 })
                 }
             </tbody>
@@ -107,7 +116,8 @@ const DataTable = ({ fieldInfos, rows }) => {
 }
 DataTable.propTypes = {
     fieldInfos: PropTypes.array.isRequired,
-    rows: PropTypes.array.isRequired
+    rows: PropTypes.array.isRequired,
+    calcFields: PropTypes.func
 }
 
 export default DataTable;

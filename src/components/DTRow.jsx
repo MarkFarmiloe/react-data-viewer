@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-const DTRow = ({ fieldInfos, row }) => {
+const DTRow = ({ fieldInfos, row, rowChanged }) => {
     const dateToString = v => {
         const d = new Date(0, 0, v - 1);
         return d.toLocaleDateString();
@@ -17,15 +17,22 @@ const DTRow = ({ fieldInfos, row }) => {
                 return [v, ""];
         }
     }
+    const toggleIncluded = (fldno) => {
+        // row[fldno] = !row[fldno];
+        if (rowChanged) { rowChanged(fldno, !row[fldno]); }
+    }
     // console.log(row);
     return (
         <tr key={row[0]}>
             {fieldInfos.map(fldInfo => {
                 const v = row[fldInfo.fldno];
                 const [txt, cls] = formatValue(v, fldInfo.dataType);
+
                 return (
                     <td key={fldInfo.fldno} value={v} className={cls}>
-                        {txt}
+                        {fldInfo.dataType === "bool" ?
+                        <input type="checkbox" checked={v} onChange={() => toggleIncluded(fldInfo.fldno)} /> :
+                        txt}
                     </td>
                 );
             })}
@@ -37,7 +44,8 @@ DTRow.propTypes = {
         fldno: PropTypes.number.isRequired,
         dataType: PropTypes.string.isRequired
     })),
-    row: PropTypes.arrayOf(PropTypes.any).isRequired
+    row: PropTypes.arrayOf(PropTypes.any).isRequired,
+    rowChanged: PropTypes.func
 }
 
 export default DTRow;
