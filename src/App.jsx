@@ -7,23 +7,26 @@ import DataTable from "./components/DataTable";
 function App() {
   const [fieldInfos, setFieldInfos] = useState();
   const [rows, setRows] = useState();
+  const [viewConfig, setViewConfig] = useState();
   useEffect(() => {
-    setFieldInfos([
-      { fldno: 5, dataType: "bool", text: "" },
-      { fldno: 2, dataType: "", text: "Surname" },
-      { fldno: 1, dataType: "", text: "Forename" },
-      { fldno: 3, dataType: "", text: "Age" },
-      { fldno: 6, dataType: "int", text: "FamilyAge" },
-    ]);
-  }, []);
-  useEffect(() => {
-    const rows = [
-      [1, "John", "Smith", 8, "extra"],
-      [2, "Mark", "Farmiloe", 65, "unused"],
-      [3, "Hilary", "Farmiloe", 60, "data"],
-    ];
-    calcFields(rows);
-    setRows(rows);
+    fetch("http://localhost:3000/api/stockReqd")
+    .then(res => {
+      return res.json();
+    })
+    .then(data => {
+      console.log(data);
+      const fi = data[1];
+      const vc = data[2];
+      vc.forEach(vi => {
+        vi.type = fi.find(f => f.index === vi.index).type;
+      });
+      setRows(data[0]);
+      setFieldInfos(fi);
+      setViewConfig(vc);
+    })
+    .catch(err => {
+      console.log(err);
+    });
   }, []);
   const calcFields = (rows) => {
     console.log("A", rows);
@@ -54,8 +57,9 @@ function App() {
       <p className="read-the-docs">
         Click on the Vite and React logos to learn more
       </p> */}
-      {fieldInfos && (
+      {viewConfig && (
         <DataTable
+          viewConfig={viewConfig}
           fieldInfos={fieldInfos}
           rows={rows}
           calcFields={calcFields}

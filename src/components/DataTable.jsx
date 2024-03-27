@@ -3,7 +3,7 @@ import DTHeader from "./DTHeader";
 import DTRow from "./DTRow";
 import { useRef, useState } from 'react';
 
-const DataTable = ({ fieldInfos, rows, calcFields }) => {
+const DataTable = ({ viewConfig, rows, calcFields }) => {
     const [filters, setFilters] = useState({}); // the set of filters on the data
     const [currentSort, setCurrentSort] = useState(""); // the current sort of the data
     const [refresh, setRefresh] = useState(true);
@@ -17,7 +17,7 @@ const DataTable = ({ fieldInfos, rows, calcFields }) => {
 
     const handleFiltersChange = (fldno, value) => {
         setFilters(filters => {
-            const newFilters = {...filters};
+            const newFilters = { ...filters };
             newFilters[fldno] = value;
             config.current.filteredRowIndexes = null;
             return newFilters;
@@ -26,7 +26,7 @@ const DataTable = ({ fieldInfos, rows, calcFields }) => {
 
     const handleSortsChange = (append, fldno, asc) => {
         if (append) {
-            const newSorts = config.current.sorts.filter(([fno, ]) => fno != fldno);
+            const newSorts = config.current.sorts.filter(([fno,]) => fno != fldno);
             newSorts.push([fldno, asc]);
             config.current.sorts = newSorts;
         } else {
@@ -95,18 +95,18 @@ const DataTable = ({ fieldInfos, rows, calcFields }) => {
         let fri = config.current.indexes[currentSort] ?? Array.from({ length: rows.length }, (_, i) => i);
         Object.keys(filters).forEach(fldno => {
             const filterValue = filters[fldno].toLowerCase();
-            fri = fri.filter(rowIndex => rows[rowIndex][fldno].toLowerCase().includes(filterValue));    
+            fri = fri.filter(rowIndex => rows[rowIndex][fldno].toLowerCase().includes(filterValue));
         });
         config.current.filteredRowIndexes = fri;
         if (calcFields) { calcFields(rows) }
     }
     return (
         <table>
-            <DTHeader fieldInfos={fieldInfos} filtersChanged={handleFiltersChange} sorts={config.current.sorts} sortsChanged={handleSortsChange} />
+            <DTHeader viewConfig={viewConfig} filtersChanged={handleFiltersChange} sorts={config.current.sorts} sortsChanged={handleSortsChange} />
             <tbody>
-                {config.current.filteredRowIndexes.map(rowIndex => { 
-                    return <DTRow key={rows[rowIndex][0]} 
-                        fieldInfos={fieldInfos} row={rows[rowIndex]} 
+                {config.current.filteredRowIndexes.map(rowIndex => {
+                    return <DTRow key={rows[rowIndex][0]}
+                        viewConfig={viewConfig} row={rows[rowIndex]}
                         rowChanged={(fldno, newValue) => rowChanged(rowIndex, fldno, newValue)} />
                 })
                 }
@@ -115,7 +115,7 @@ const DataTable = ({ fieldInfos, rows, calcFields }) => {
     )
 }
 DataTable.propTypes = {
-    fieldInfos: PropTypes.array.isRequired,
+    viewConfig: PropTypes.array.isRequired,
     rows: PropTypes.array.isRequired,
     calcFields: PropTypes.func
 }

@@ -1,25 +1,24 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 
-const DTHSearch = ({fieldInfo, valueUpdated}) => {
+const DTHSearch = ({viewInfo, valueUpdated}) => {
     const [value, setValue] = useState("")
-    const changeHandler = (e, fldno) => {
+    const changeHandler = (e, index) => {
         setValue(e.target.value);
-        valueUpdated(fldno, e.target.value);
+        valueUpdated(index, e.target.value);
     }
-    const {fldno} = fieldInfo;
+    // eslint-disable-next-line no-unused-vars
+    const {index, type} = viewInfo;
     return (
-        <th scope="col" value={fldno}>
-            <input type='text' value={value} onChange={(e) => changeHandler(e, fldno)} />
+        <th scope="col" value={index}>
+            <input type='text' value={value} onChange={(e) => changeHandler(e, index)} />
         </th>
     )
 }
 DTHSearch.propTypes = {
-    fieldInfo: PropTypes.shape({
-        fldno: PropTypes.number.isRequired,
-        text: PropTypes.string.isRequired,
-        imgsrc: PropTypes.string,
-        sortIndex: PropTypes.number
+    viewInfo: PropTypes.shape({
+        index: PropTypes.number.isRequired,
+        type: PropTypes.string.isRequired
     }).isRequired,
     valueUpdated: PropTypes.func.isRequired
 }

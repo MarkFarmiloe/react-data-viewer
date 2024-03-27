@@ -1,15 +1,15 @@
 import PropTypes from 'prop-types';
 
-const DTHTitle = ({fieldInfo, changeSort}) => {
-    const {fldno, text, imgsrc, sortIndex} = fieldInfo;
+const DTHTitle = ({viewInfo, changeSort}) => {
+    const {index, title, imgsrc, sortIndex} = viewInfo;
     const handleClick = (e) => {
         const asc = !e.shiftKey;
         const append = e.ctrlKey;
-        changeSort(append, fldno, asc);
+        changeSort(append, index, asc);
     }
     return (
-        <th scope="col" value={fldno} onClick={handleClick}>            
-            {text}
+        <th scope="col" value={index} onClick={handleClick}>            
+            {title}
             { sortIndex >= 0 && 
                 <> <img  src={imgsrc} /><span>{1 + sortIndex}</span></>
             }
@@ -17,9 +17,9 @@ const DTHTitle = ({fieldInfo, changeSort}) => {
     )
 }
 DTHTitle.propTypes = {
-    fieldInfo: PropTypes.shape({
-        fldno: PropTypes.number.isRequired,
-        text: PropTypes.string.isRequired,
+    viewInfo: PropTypes.shape({
+        index: PropTypes.number.isRequired,
+        title: PropTypes.string.isRequired,
         imgsrc: PropTypes.string,
         sortIndex: PropTypes.number
     }).isRequired,

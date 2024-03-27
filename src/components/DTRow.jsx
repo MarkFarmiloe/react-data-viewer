@@ -1,17 +1,17 @@
 import PropTypes from 'prop-types';
 
-const DTRow = ({ fieldInfos, row, rowChanged }) => {
+const DTRow = ({ viewConfig, row, rowChanged }) => {
     const dateToString = v => {
-        const d = new Date(0, 0, v - 1);
+        const d = new Date(v);
         return d.toLocaleDateString();
     }
     const formatValue = (v, dataType) => {
         switch (dataType) {
-            case "Int":
+            case "integer":
                 return [v, "n0"];
-            case "Money":
+            case "number":
                 return [v.toFixed(2), "n2"];
-            case "Date":
+            case "date":
                 return [dateToString(v), "date"];
             default:
                 return [v, ""];
@@ -24,14 +24,14 @@ const DTRow = ({ fieldInfos, row, rowChanged }) => {
     // console.log(row);
     return (
         <tr key={row[0]}>
-            {fieldInfos.map(fldInfo => {
-                const v = row[fldInfo.fldno];
-                const [txt, cls] = formatValue(v, fldInfo.dataType);
+            {viewConfig.map(viewInfo => {
+                const v = row[viewInfo.index];
+                const [txt, cls] = formatValue(v, viewInfo.type);
 
                 return (
-                    <td key={fldInfo.fldno} value={v} className={cls}>
-                        {fldInfo.dataType === "bool" ?
-                        <input type="checkbox" checked={v} onChange={() => toggleIncluded(fldInfo.fldno)} /> :
+                    <td key={viewInfo.index} value={v} className={cls}>
+                        {viewInfo.type === "bool" ?
+                        <input type="checkbox" checked={v} onChange={() => toggleIncluded(viewInfo.index)} /> :
                         txt}
                     </td>
                 );
@@ -40,9 +40,9 @@ const DTRow = ({ fieldInfos, row, rowChanged }) => {
     )
 }
 DTRow.propTypes = {
-    fieldInfos: PropTypes.arrayOf(PropTypes.shape({
-        fldno: PropTypes.number.isRequired,
-        dataType: PropTypes.string.isRequired
+    viewConfig: PropTypes.arrayOf(PropTypes.shape({
+        index: PropTypes.number.isRequired,
+        type: PropTypes.string.isRequired
     })),
     row: PropTypes.arrayOf(PropTypes.any).isRequired,
     rowChanged: PropTypes.func
